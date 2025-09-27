@@ -3,6 +3,14 @@ import {Task} from '../components/Task'
 export const Home =()=>{
     const [taskVal,setTaskVal]=useState("")
     const [time,setTime]=useState(new Date());
+    const [tasks,setTasks]=useState(()=>{
+        const rawTodos =localStorage.getItem("reactTodo")
+        if(!rawTodos) return []
+        return JSON.parse(rawTodos)
+    });
+
+    
+
     useEffect(()=>{
         const displayTime=setInterval(()=>{
             setTime(new Date())
@@ -10,15 +18,17 @@ export const Home =()=>{
         return()=>clearInterval(displayTime)
     },[]);
     const handleSubmit=()=>{
-        if(taskVal.trim()!==""){
+        if(taskVal.trim()!==""&&!tasks.includes(taskVal)){
             console.log(taskVal)
             setTasks([...tasks,taskVal.trim()])
             setTaskVal("")
             console.log(tasks)
         }
     }
+    
+    localStorage.setItem("reactTodo",JSON.stringify(tasks));
+
     const [dTask,setDTask]=useState("")
-    const [tasks,setTasks]=useState([]);
     if(dTask!==""){
         setTasks(tasks.filter(task=>
             task!==dTask
